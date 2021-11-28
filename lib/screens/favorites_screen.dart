@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/item_dao.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -10,13 +12,38 @@ class FavoritesScreen extends StatefulWidget {
 class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Favoritos',
-          style: TextStyle(fontSize: 36, color: Colors.brown[600]),
-        ),
-      ),
+    return Consumer<ItemDao>(
+      builder: (context, itemDao, child) {
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  'Favoritos',
+                  style: TextStyle(fontSize: 36, color: Colors.brown[600]),
+                ),
+              ),
+              Flexible(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: itemDao.itemFavorited.length,
+                  itemBuilder: (context, index) {
+                    if (itemDao.itemFavorited.isNotEmpty) {
+                      return itemDao.itemFavorited[index];
+                    } else {
+                      return const Center(
+                          child: Text(
+                              'No tienes ningún artículo en favoritos todavía'));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

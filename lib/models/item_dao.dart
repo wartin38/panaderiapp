@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/item_test2.dart';
 
-// Esta clase debe de ser un Provider
 class ItemDao extends ChangeNotifier {
   // final CollectionReference collection =
   //     FirebaseFirestore.instance.collection('items');
@@ -14,6 +13,8 @@ class ItemDao extends ChangeNotifier {
   // Stream<QuerySnapshot> getItemStream() {
   //   return collection.snapshots();
   // }
+
+  List<Widget> itemFavorited = <Widget>[];
 
   final List<Widget> productList1 = <Widget>[
     ItemTest(
@@ -179,4 +180,10 @@ class ItemDao extends ChangeNotifier {
         title: 'Rosca de Reyes',
         subtitle: 'Especiales'),
   ];
+
+  void addFavoriteItem(ItemTest? item) {
+    if (item == null) return;
+    itemFavorited.add(item);
+    notifyListeners();
+  }
 }
