@@ -1,6 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../widgets/item_test2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemDao extends ChangeNotifier {
   // final CollectionReference collection =
@@ -14,9 +15,14 @@ class ItemDao extends ChangeNotifier {
   //   return collection.snapshots();
   // }
 
-  List<Widget> itemFavorited = <Widget>[];
+  // Llave que utilizará la instancia de SharedPreferences:
+  static const String _prefFavoritesTitle = 'favoriteItems';
+  List<String> favoritesTitle = <String>[];
 
-  final List<Widget> productList1 = <Widget>[
+  // Lista de elementos puestos en favoritos.
+  List<ItemTest> itemFavorited = <ItemTest>[];
+
+  final List<ItemTest> productList1 = <ItemTest>[
     ItemTest(
         key: UniqueKey(),
         image: 'assets/images/bisquet.png',
@@ -79,7 +85,7 @@ class ItemDao extends ChangeNotifier {
         subtitle: 'Panadería'),
   ];
 
-  final List<Widget> productList2 = <Widget>[
+  final List<ItemTest> productList2 = <ItemTest>[
     ItemTest(
         key: UniqueKey(),
         image: 'assets/images/pastel_1.png',
@@ -148,7 +154,7 @@ class ItemDao extends ChangeNotifier {
         subtitle: 'Repostería'),
   ];
 
-  final List<Widget> productList3 = <Widget>[
+  final List<ItemTest> productList3 = <ItemTest>[
     ItemTest(
         key: UniqueKey(),
         image: 'assets/images/especial_1.png',
@@ -181,9 +187,83 @@ class ItemDao extends ChangeNotifier {
         subtitle: 'Especiales'),
   ];
 
-  void addFavoriteItem(ItemTest? item) {
-    if (item == null) return;
-    itemFavorited.add(item);
+  void loadSharedPreferences() async {
+    final preferences = await SharedPreferences.getInstance();
+    final favorites = preferences.getStringList(_prefFavoritesTitle);
+    if (favorites != null) {
+      favoritesTitle = favorites;
+    } else {
+      favoritesTitle = <String>[];
+    }
+    preferences.setStringList(_prefFavoritesTitle, favoritesTitle);
     notifyListeners();
+  }
+
+  void saveFavoritesIDs() async {
+    final preferences = await SharedPreferences.getInstance();
+    preferences.setStringList(_prefFavoritesTitle, favoritesTitle);
+    notifyListeners();
+  }
+
+  void addFavoriteItem(ItemTest item) async {
+    final preferences = await SharedPreferences.getInstance();
+    var favoritesList = preferences.getStringList(_prefFavoritesTitle);
+    if (favoritesList == null) {
+      return;
+    } else if (!favoritesList.contains(item.title)) {
+      favoritesTitle.add(item.title);
+      itemFavorited.add(item);
+      saveFavoritesIDs();
+      notifyListeners();
+    } else {
+      return;
+    }
+  }
+
+  void setFavoriteItems() {
+    for (var i = 0; i < productList1.length; i++) {
+      if (!favoritesTitle.contains(productList1[i].title)) {
+        continue;
+      } else {
+        ItemTest item = ItemTest(
+            image: productList1[i].image,
+            title: productList1[i].title,
+            subtitle: productList1[i].subtitle,
+            price: productList1[i].price);
+        if (!itemFavorited.contains(item)) {
+          itemFavorited.add(item);
+        }
+      }
+    }
+    for (var i = 0; i < productList2.length; i++) {
+      if (!favoritesTitle.contains(productList2[i].title)) {
+        continue;
+      } else {
+        ItemTest item = ItemTest(
+            image: productList2[i].image,
+            title: productList2[i].title,
+            subtitle: productList2[i].subtitle,
+            price: productList2[i].price);
+        if (!itemFavorited.contains(item)) {
+          itemFavorited.add(item);
+        }
+      }
+    }
+    for (var i = 0; i < productList3.length; i++) {
+      if (!favoritesTitle.contains(productList3[i].title)) {
+        continue;
+      } else {
+        ItemTest item = ItemTest(
+            image: productList3[i].image,
+            title: productList3[i].title,
+            subtitle: productList3[i].subtitle,
+            price: productList3[i].price);
+        if (!itemFavorited.contains(item)) {
+          itemFavorited.add(item);
+        }
+      }
+    }
+    notifyListeners();
+    // TODO: Considerar utilizar SQLite para guardar la lista de items Favoritos
   }
 }

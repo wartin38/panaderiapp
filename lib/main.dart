@@ -5,7 +5,11 @@ import 'bottom_navigation.dart';
 import '../models/item_dao.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  ItemDao itemDao = ItemDao();
+  itemDao.loadSharedPreferences();
+  itemDao.setFavoriteItems();
   runApp(const MyApp());
 }
 
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Panaderia_v1',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.brown,

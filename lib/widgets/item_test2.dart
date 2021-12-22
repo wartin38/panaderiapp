@@ -22,8 +22,7 @@ class ItemTest extends StatefulWidget {
 }
 
 class _ItemTestState extends State<ItemTest> {
-  int counter = 0;
-  bool _isFavorited = false;
+  // int counter = 0;
 
   // void _setFavorite() {
   //   setState(() {
@@ -98,23 +97,23 @@ class _ItemTestState extends State<ItemTest> {
                           style: const TextStyle(fontSize: 16),
                         ),
                         IconButton(
-                          // Nota: Pasar la función _eetFavorite para acá y agregar
-                          // el consumer a este widget para pasar el widget.
                           onPressed: () {
-                            setState(() {
-                              _isFavorited = !_isFavorited;
-                              //     // TODO. Para esto requiero un provider:
-                              //     // if (_isFavorited) {
-                              //     //   BottomNavigation(cartItems: counter + 1);
-                              //     // }
-                            });
                             itemDao.addFavoriteItem(widget);
+                            const snackBar =
+                                SnackBar(content: Text('Agregado a Favoritos'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            //     // TODO. Para esto requiero un provider:
+                            //     // if (_isFavorited) {
+                            //     //   BottomNavigation(cartItems: counter + 1);
+                            //     // }
+                            setState(() {});
                           },
-                          icon: _isFavorited
+                          icon: itemDao.itemFavorited.contains(widget)
                               ? const Icon(Icons.favorite)
                               : const Icon(Icons.favorite_border_outlined),
                           iconSize: 25,
-                          color: _isFavorited
+                          color: itemDao.itemFavorited.contains(widget)
                               ? Colors.limeAccent[400]
                               : Colors.limeAccent[600],
                         )

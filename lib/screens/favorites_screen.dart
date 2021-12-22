@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/item_dao.dart';
+import '../widgets/item_test2.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -15,9 +16,34 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Consumer<ItemDao>(
       builder: (context, itemDao, child) {
         return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 45,
+            centerTitle: true,
+            title: Stack(
+              children: [
+                Text(
+                  '¡Panadería Don Gabo!',
+                  style: TextStyle(
+                      fontSize: 22,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 6
+                        ..color = Colors.green.shade600),
+                ),
+                const Text(
+                  '¡Panadería Don Gabo!',
+                  style: TextStyle(
+                    fontSize: 22,
+                    // color: Colors.orange.shade600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
           body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
                 child: Text(
